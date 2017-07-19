@@ -1,4 +1,4 @@
-setwd("/Users/Teresa/Documents/R/BAME-T test")
+setwd("/Users/Teresa/Documents/R/Diversity in Teams")
 emp.data <- read.csv("emp_diversity_data.csv", 
                      header = T, sep=",",
                      stringsAsFactors = F)
@@ -36,13 +36,11 @@ prof.bame <- emp.data[!S,]$BAME
 # t-test of BAME percentage between sales and prof functions
 t.test(sales.bame, prof.bame)
 
-# t-test of male percentage between sales and prof functions
-t.test(sales.bame, prof.bame)
-
 # Get percentMale samples
 sales.male <- emp.data[S,]$PercentMale
 prof.male <- emp.data[!S,]$PercentMale
 
+# t-test of male percentage between sales and prof functions
 t.test(sales.male, prof.male)
 
 
