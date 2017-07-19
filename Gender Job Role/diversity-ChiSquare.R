@@ -1,6 +1,6 @@
 
 library(ggplot2)
-setwd("/Users/Teresa/Documents/R/Chi Square Testing")
+setwd("/Users/Teresa/Documents/R/Gender Job Role")
 emp.data <- read.csv("diversity.csv", 
                         header = T, sep=",",
                         stringsAsFactors = F)
