@@ -14,27 +14,26 @@ selected.survey <- cbind(survey.data$Eng1, survey.data$Eng2, survey.data$Eng3,
 colnames(selected.survey) <- c('Eng1', 'Eng2', 'Eng3', 'Eng4', 'Pos1', 'Pos2',
                                'Pos3')
 
-# Run a PCA (Primary Component Analysis) to determine the number of the factors.
+# Run a PCA (Principal Component Analysis) to determine the number of the factors.
 selected.survey.pca <- princomp(na.omit(selected.survey))
 summary(selected.survey.pca)
 plot(selected.survey.pca)
 
 ##############################################
 # Based on the summary, two components exist
-# factanal requires the dataset: survey.data
 # factor = 2
 # rotation = varimax <-- default setting
 ##############################################
 
-selected.survey.fa <- factanal(na.omit(selected.survey), factors = 2, 
-                               rotation = "varimax")
-selected.survey.fa
+selected.survey.pr <- principal(na.omit(selected.survey), nfactors = 2, 
+                               rotate = "varimax")
+selected.survey.pr
 
 # Reliability test
 ocb.survey <- cbind(survey.data$ocb1, survey.data$ocb2,survey.data$ocb3,
                     survey.data$ocb4)
 colnames(ocb.survey)<- c('Ocb1', 'Ocb2', 'Ocb3', 'Ocb4')
 
-alpha(ocb.survey)
+psych::alpha(ocb.survey)
 
 
