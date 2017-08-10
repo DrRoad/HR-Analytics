@@ -1,6 +1,6 @@
 library(psych)
 library("factoextra")
-setwd("/Users/Teresa/Documents/R/Factor testing at group level")
+setwd("/Users/Teresa/Documents/R/PCA testing at team level")
 # read data
 survey.data <- read.csv("Survey Result Team Level.csv", 
                         header = T, sep=",")
