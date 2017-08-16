@@ -10,20 +10,20 @@ empSurvey <- read.csv("Engagement and team level data.csv",
 # dependent variable (continuous) - BAME percentage
 ###########################################################
 
-# Get BAME samples
-S <- emp.data$Function == 1
-sales.bame <- emp.data[S,]$BAME
-prof.bame <- emp.data[!S,]$BAME
+# independent t-test for LondonorNot vs engegement
+ldn <- empSurvey$LondonorNot == 1
+ldn.eng <- empSurvey[ldn,]$EMPsurvEngagement
+noLdn.eng <- empSurvey[!ldn,]$EMPsurvEngagement
+t.test(ldn.eng, noLdn.eng)
 
-# t-test of BAME percentage between sales and prof functions
-t.test(sales.bame, prof.bame)
+# independent t-test for Function vs engegement
+s <- empSurvey$Function == 1
+sales.eng <- empSurvey[s,]$EMPsurvEngagement
+prof.eng <- empSurvey[!s,]$EMPsurvEngagement
+t.test(sales.eng, prof.eng)
 
-# Get percentMale samples
-sales.male <- emp.data[S,]$PercentMale
-prof.male <- emp.data[!S,]$PercentMale
+# using multiple regression to predict team-level engagement
 
-# t-test of male percentage between sales and prof functions
-t.test(sales.male, prof.male)
 
 
 
