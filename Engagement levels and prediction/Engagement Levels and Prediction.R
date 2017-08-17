@@ -1,3 +1,4 @@
+library("QuantPsyc")
 setwd("/Users/Teresa/Documents/R/Engagement levels and prediction")
 empSurvey <- read.csv("Engagement and team level data.csv", 
                      header = T, sep=",",
@@ -5,9 +6,8 @@ empSurvey <- read.csv("Engagement and team level data.csv",
 
 ###########################################################
 # Independent samples T-test
-# Independent variable(categorical)- department functions: 
-# sales (function 1) or professional (function 2)
-# dependent variable (continuous) - BAME percentage
+# Independent variable(categorical)- function and LondonorNot
+# dependent variable (continuous) - EMPsurvEngagement
 ###########################################################
 
 # independent t-test for LondonorNot vs engegement
@@ -23,6 +23,14 @@ prof.eng <- empSurvey[!s,]$EMPsurvEngagement
 t.test(sales.eng, prof.eng)
 
 # using multiple regression to predict team-level engagement
+eng.lm <- lm(EMPsurvEngagement ~ Function + GroupSize + PercentMale +
+             EmpSurvOrgIntegrity + EmpSurvSupervisor, data=empSurvey)
+
+summary(eng.lm)
+
+# standardized beta coefficient - to know which variable has bigger impact
+# The higher the absolute value of the beta coefficient, the stronger the effect.
+lm.beta(eng.lm)
 
 
 
