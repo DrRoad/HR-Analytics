@@ -23,7 +23,7 @@ prof.eng <- empSurvey[!s,]$EMPsurvEngagement
 t.test(sales.eng, prof.eng)
 
 # using multiple regression to predict team-level engagement
-eng.lm <- lm(EMPsurvEngagement ~ Function + GroupSize + PercentMale +
+eng.lm <- lm(EMPsurvEngagement ~ Function + GroupSize + PercentMale + BAME +
              EmpSurvOrgIntegrity + EmpSurvSupervisor, data=empSurvey)
 
 summary(eng.lm)
