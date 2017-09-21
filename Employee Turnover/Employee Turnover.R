@@ -48,11 +48,11 @@ leveneTest(Engagement ~ Country, data=teamTurnOver, center="median")
 # Next step is to use one way Anova with Welch F-test not assuming equal variance.
 # Turnover rate
 turnover.oneway <- oneway.test(TeamSeparation ~ Country, data=teamTurnOver) 
-turnover.aov <- aov(TeamSeparation ~ Country, data=teamTurnOver)
+#turnover.aov <- aov(TeamSeparation ~ Country, data=teamTurnOver)
 
 # Employee Engagement rate
 oneway.test(Engagement ~ Country, data=teamTurnOver) # Welch test
-eng.aov <- aov(Engagement ~ Country, data=teamTurnOver)
+#eng.aov <- aov(Engagement ~ Country, data=teamTurnOver)
 
 # To identify which countries differ, we need to look at the post-hoc tests.
 # method 1: userfriendly package - posthocTGH. It allows Games-Howell method
