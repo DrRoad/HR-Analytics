@@ -49,6 +49,7 @@ leveneTest(Engagement ~ Country, data=teamTurnOver, center="median")
 # Turnover rate
 turnover.oneway <- oneway.test(TeamSeparation ~ Country, data=teamTurnOver) 
 #turnover.aov <- aov(TeamSeparation ~ Country, data=teamTurnOver)
+turnover.oneway
 
 # Employee Engagement rate
 oneway.test(Engagement ~ Country, data=teamTurnOver) # Welch test
