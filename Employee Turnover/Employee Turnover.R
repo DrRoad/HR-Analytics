@@ -1,46 +1,78 @@
 library("QuantPsyc")
-library(ggplot2)
+library("car")
+library("multcomp")
+library("userfriendlyscience")
 setwd("/Users/Teresa/Documents/R/Employee Turnover")
+
+# Turnover at the individual level
+# Turnover value is a catagorical data
+
 emp <- read.csv("Individual Turnover.csv", header = T, sep=",",
                 stringsAsFactors = F)
 
+# Create a frequency table and explore
+emp.table <- table(emp$Country, emp$LeaverStatus)
 
+rownames(emp.table) <- c('Belgium','Sweden','Italy','France','Poland',
+                         'Mexico', 'Spain','UK','United States','Australia')
+colnames(emp.table)<- c('Stayer','Leaver')
 
-# Create a summary table
-emp.table <- table(emp.data)
-###########################################################
-# Independent samples T-test
-# Independent variable(categorical)- function and LondonorNot
-# dependent variable (continuous) - EMPsurvEngagement
-###########################################################
+# overall turnover percentage
+turnover.pcnt <- round(sum(emp.table[,2]) / sum((emp.table[,1] + emp.table[,2])),3)
+turnover.pcnt
 
-# independent t-test for LondonorNot vs engegement
-ldn <- empSurvey$LondonorNot == 1
-ldn.eng <- empSurvey[ldn,]$EMPsurvEngagement
-noLdn.eng <- empSurvey[!ldn,]$EMPsurvEngagement
-t.test(ldn.eng, noLdn.eng)
+# Chi square to explore regional differences in individual staff turnover
+chisq.test(emp.table, simulate.p.value = TRUE)
 
-# independent t-test for Function vs engegement
-s <- empSurvey$Function == 1
-sales.eng <- empSurvey[s,]$EMPsurvEngagement
-prof.eng <- empSurvey[!s,]$EMPsurvEngagement
-t.test(sales.eng, prof.eng)
+# There is no significant difference between what we would expect in each region
+# and what was observed. 
 
-# using multiple regression to predict team-level engagement
-eng.lm <- lm(EMPsurvEngagement ~ Function + GroupSize + PercentMale + BAME +
-             EmpSurvOrgIntegrity + EmpSurvSupervisor, data=empSurvey)
+#######################################################
+# Turnover rate (TeamSeparation) is a continuous data. 
+# Use Levene's Test and one-way Anova to test
 
-summary(eng.lm)
+teamTurnOver <- read.csv("Team Turnover.csv", header = T, sep=",")
+teamTurnOver <- within(teamTurnOver, {
+      Country <- factor(Country, labels=c('UK','United States','Canada','Spain')) 
+      })
 
-# standardized beta coefficient - to know which variable has bigger impact
-# The higher the absolute value of the beta coefficient, the stronger the effect.
-lm.beta(eng.lm)
+# Lavene's Test for turnover rate
+leveneTest(TeamSeparation ~ Country, data=teamTurnOver, center="median")
 
+# Lavene's Test for turnover rate
+leveneTest(Engagement ~ Country, data=teamTurnOver, center="median")
 
+# Because both results are significant, it means that the variances are not
+# equally distributed across the countries. 
 
+# Next step is to use one way Anova with Welch F-test not assuming equal variance.
+# Turnover rate
+turnover.oneway <- oneway.test(TeamSeparation ~ Country, data=teamTurnOver) 
+turnover.aov <- aov(TeamSeparation ~ Country, data=teamTurnOver)
 
+# Employee Engagement rate
+oneway.test(Engagement ~ Country, data=teamTurnOver) # Welch test
+eng.aov <- aov(Engagement ~ Country, data=teamTurnOver)
 
+# To identify which countries differ, we need to look at the post-hoc tests.
+# method 1: userfriendly package - posthocTGH. It allows Games-Howell method
+# which is used when the variance is not spreaded equally.
 
+posthocTGH(teamTurnOver$TeamSeparation, teamTurnOver$Country,
+           method = "games-howell", # or Tukey
+           #conf.level = 0.95, 
+           digits=3, 
+           formatPvalue = TRUE)
+posthocTGH(teamTurnOver$Engagement, teamTurnOver$Country,
+           method = "games-howell",
+           digits=3, 
+           formatPvalue = TRUE)
 
+# method 2 - Tukey using glht()'s Tukey use it when there is an equal variance
+Turnover.postHocs <-glht( turnover.aov, linfct = mcp( Country = "Tukey")) 
+summary( Turnover.postHocs) 
+confint( Turnover.postHocs)
 
-
+Eng.postHocs <-glht( eng.aov, linfct = mcp( Country = "Tukey")) 
+summary( Eng.postHocs) 
+confint( Eng.postHocs)
