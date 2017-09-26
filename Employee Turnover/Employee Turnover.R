@@ -39,7 +39,7 @@ teamTurnOver <- within(teamTurnOver, {
 # Lavene's Test for turnover rate
 leveneTest(TeamSeparation ~ Country, data=teamTurnOver, center="median")
 
-# Lavene's Test for turnover rate
+# Lavene's Test for Engagement rate
 leveneTest(Engagement ~ Country, data=teamTurnOver, center="median")
 
 # Because both results are significant, it means that the variances are not
