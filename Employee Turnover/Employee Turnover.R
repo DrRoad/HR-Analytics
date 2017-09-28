@@ -2,6 +2,8 @@ library("QuantPsyc")
 library("car")
 library("multcomp")
 library("userfriendlyscience")
+library("BaylorEdPsych")
+library("metafor")
 setwd("/Users/Teresa/Documents/R/Employee Turnover")
 
 # Turnover at the individual level
@@ -18,7 +20,8 @@ rownames(emp.table) <- c('Belgium','Sweden','Italy','France','Poland',
 colnames(emp.table)<- c('Stayer','Leaver')
 
 # overall turnover percentage
-turnover.pcnt <- round(sum(emp.table[,2]) / sum((emp.table[,1] + emp.table[,2])),3)
+turnover.pcnt <- round(sum(emp.table[,2]) / sum((emp.table[,1] + 
+                                                   emp.table[,2])),3)
 turnover.pcnt
 
 # Chi square to explore regional differences in individual staff turnover
@@ -33,7 +36,8 @@ chisq.test(emp.table, simulate.p.value = TRUE)
 
 teamTurnOver <- read.csv("Team Turnover.csv", header = T, sep=",")
 teamTurnOver <- within(teamTurnOver, {
-      Country <- factor(Country, labels=c('UK','United States','Canada','Spain')) 
+      Country <- factor(Country, 
+                        labels=c('UK','United States','Canada','Spain')) 
       })
 
 # Lavene's Test for turnover rate
@@ -45,7 +49,8 @@ leveneTest(Engagement ~ Country, data=teamTurnOver, center="median")
 # Because both results are significant, it means that the variances are not
 # equally distributed across the countries. 
 
-# Next step is to use one way Anova with Welch F-test not assuming equal variance.
+# Next step is to use one way Anova with Welch F-test not assuming equal 
+# variance.
 # Turnover rate
 turnover.oneway <- oneway.test(TeamSeparation ~ Country, data=teamTurnOver) 
 #turnover.aov <- aov(TeamSeparation ~ Country, data=teamTurnOver)
@@ -70,10 +75,35 @@ posthocTGH(teamTurnOver$Engagement, teamTurnOver$Country,
            formatPvalue = TRUE)
 
 # method 2 - Tukey using glht()'s Tukey use it when there is an equal variance
-Turnover.postHocs <-glht( turnover.aov, linfct = mcp( Country = "Tukey")) 
-summary( Turnover.postHocs) 
-confint( Turnover.postHocs)
+#Turnover.postHocs <-glht( turnover.aov, linfct = mcp( Country = "Tukey")) 
+#summary( Turnover.postHocs) 
+#confint( Turnover.postHocs)
 
-Eng.postHocs <-glht( eng.aov, linfct = mcp( Country = "Tukey")) 
-summary( Eng.postHocs) 
-confint( Eng.postHocs)
+#Eng.postHocs <-glht( eng.aov, linfct = mcp( Country = "Tukey")) 
+#summary( Eng.postHocs) 
+#confint( Eng.postHocs)
+
+##########################################################################
+##########################################################################
+
+# Logistic regression to predict individual turnover. Use emp dataset.
+# Make Country a factor
+emp <- within(emp, {
+  Country <- factor(Country, 
+                    labels=c('Belgium','Sweden','Italy','France', 'Poland',
+                             'Mexico', 'Spain', 'UK', 'US','Australia')) 
+})
+logit.ind.tnvr <- glm(LeaverStatus ~.,family=binomial(link='logit'),data=emp)
+summary(logit.ind.tnvr)
+
+# Pseudo R-square values
+PseudoR2(logit.ind.tnvr)
+
+# Odds ratio
+exp(logit.ind.tnvr$coefficients)
+
+
+
+
+
+
