@@ -93,7 +93,7 @@ emp <- within(emp, {
                     labels=c('Belgium','Sweden','Italy','France', 'Poland',
                              'Mexico', 'Spain', 'UK', 'US','Australia')) 
 })
-emp$Country <- relevel (emp$Country, ref = 'Australia')
+emp$Country <- relevel (emp$Country, ref = 'Australia') # use AU as a baseline
 logit.ind.tnvr <- glm(LeaverStatus ~.,family=binomial(link='logit'),data=emp)
 summary(logit.ind.tnvr)
 
