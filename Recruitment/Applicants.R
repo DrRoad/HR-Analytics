@@ -45,14 +45,14 @@ prop.table(table(apps$AcceptNY))
 # Chi square to explore gender on shortlisting 
 gen.short.tab <- table(apps$Gender, apps$ShortlistedNY)
 rownames(gen.short.tab)<-c('Male','Female')
-colnames(gen.short.tab)<-c('No','Yes')
+colnames(gen.short.tab)<-c('Shortlisted No','Shortlisted Yes')
 gen.short.tab
 chisq.test(gen.short.tab)
 
 # Chi square to explore BAME on shortlisting 
 bame.short.tab <- table(apps$BAMEyn, apps$ShortlistedNY)
-rownames(bame.short.tab)<-c('Male','Female')
-colnames(bame.short.tab)<-c('No','Yes')
+rownames(bame.short.tab)<-c('BAME-Yes','BAME-No')
+colnames(bame.short.tab)<-c('Shortlisted-No','Shortlisted-Yes')
 bame.short.tab
 chisq.test(bame.short.tab)
 
